@@ -97,6 +97,20 @@ class TestMonitoring:
     assert all(a == 0 for a in alert_lvls)
     assert d_status.active_policy == log.DriverMonitoringState.MonitoringPolicy.vision
 
+  def test_face_covering_mode_uses_standard_wheeltouch_policy(self):
+    DM = DriverMonitoring(face_covering_mode=True)
+    DM._update_states(msg_ATTENTIVE, [0, 0, 0], 0, True, False)
+    assert DM.face_detected
+    assert DM.active_policy == log.DriverMonitoringState.MonitoringPolicy.wheeltouch
+    assert DM.settings._WHEELTOUCH_POLICY_ALERT_1_TIMEOUT == 5.
+    assert DM.settings._WHEELTOUCH_POLICY_ALERT_2_TIMEOUT == 15.
+    assert DM.settings._WHEELTOUCH_POLICY_ALERT_3_TIMEOUT == 25.
+
+    # The existing wheel-interaction path still resets awareness.
+    DM.awareness = 0.5
+    DM._update_events(True, True, False, False)
+    assert DM.awareness == 1.
+
   # engaged, driver is distracted and does nothing
   def test_fully_distracted_driver(self):
     alert_lvls, d_status = self._run_seq(always_distracted, always_false, always_true, always_false)

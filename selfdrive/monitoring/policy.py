@@ -148,7 +148,7 @@ def face_orientation_from_model(orient_model, pos_model, rpy_calib):
 
 
 class DriverMonitoring:
-  def __init__(self, rhd_saved=False, settings=None, always_on=False, rhd_override=None):
+  def __init__(self, rhd_saved=False, settings=None, always_on=False, rhd_override=None, face_covering_mode=False):
     # init policy settings
     self.settings = settings if settings is not None else DRIVER_MONITOR_SETTINGS()
 
@@ -161,6 +161,10 @@ class DriverMonitoring:
 
     self.alert_level = AlertLevel.none
     self.always_on = always_on
+    # Accessibility mode for drivers whose face cannot be reliably detected.
+    # This selects the existing wheel-touch fallback without changing any alert,
+    # lockout, or no-response safety timing.
+    self.face_covering_mode = face_covering_mode
     self.distracted_types = defaultdict(bool)
     self.driver_distracted = False
     self.driver_distraction_filter = FirstOrderFilter(0., self.settings._DISTRACTED_FILTER_TS, DT_DMON)
@@ -324,7 +328,8 @@ class DriverMonitoring:
           self.dcam_uncertain_cnt = 0
 
     self.is_model_uncertain = self.hi_stds >= self.settings._HI_STD_FALLBACK_TIME
-    self._set_policy(MonitoringPolicy.vision if self.face_detected and not self.is_model_uncertain else MonitoringPolicy.wheeltouch)
+    vision_available = self.face_detected and not self.is_model_uncertain and not self.face_covering_mode
+    self._set_policy(MonitoringPolicy.vision if vision_available else MonitoringPolicy.wheeltouch)
     if self.face_detected and not self.pose.low_std and not self.driver_distracted:
       self.hi_stds += 1
     elif self.face_detected and self.pose.low_std:

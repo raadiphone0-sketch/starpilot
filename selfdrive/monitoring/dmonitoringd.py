@@ -26,6 +26,7 @@ def dmonitoringd_thread():
     rhd_saved=params.get_bool("IsRhdDetected"),
     always_on=params.get_bool("AlwaysOnDM"),
     rhd_override=get_rhd_override(params),
+    face_covering_mode=params.get_bool("FaceCoveringMode"),
   )
   demo_mode=False
 
@@ -49,6 +50,7 @@ def dmonitoringd_thread():
     # load live always-on toggle
     if sm['driverStateV2'].frameId % 40 == 1:
       DM.always_on = params.get_bool("AlwaysOnDM")
+      DM.face_covering_mode = params.get_bool("FaceCoveringMode")
       DM.wheel_on_right_default = params.get_bool("IsRhdDetected")
       DM.wheel_on_right_override = get_rhd_override(params)
       demo_mode = params.get_bool("IsDriverViewEnabled")

@@ -10,6 +10,7 @@ inline static std::unordered_map<std::string, ParamKeyAttributes> keys = {
     {"AdbEnabled", {PERSISTENT, BOOL}},
     {"AlwaysAllowUploads", {PERSISTENT, BOOL, "0", std::nullopt, 0, SETTINGS_SIMPLE}},
     {"AlwaysOnDM", {PERSISTENT, BOOL}},
+    {"FaceCoveringMode", {PERSISTENT, BOOL, "0"}},
     {"ApiCache_Device", {PERSISTENT, STRING}},
     {"AssistNowToken", {PERSISTENT, STRING}},
     {"AthenadPid", {PERSISTENT, INT}},

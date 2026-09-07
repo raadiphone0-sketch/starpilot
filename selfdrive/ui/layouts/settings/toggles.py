@@ -28,6 +28,10 @@ DESCRIPTIONS = {
     "without a turn signal activated while driving over 31 mph (50 km/h)."
   ),
   "AlwaysOnDM": tr_noop("Enable driver monitoring even when openpilot is not engaged."),
+  "FaceCoveringMode": tr_noop(
+    "Use steering-wheel interaction monitoring when a face covering prevents reliable camera monitoring. " +
+    "Standard alert and lockout safety timing remains unchanged."
+  ),
   'RecordFront': tr_noop("Upload data from the driver facing camera and help improve the driver monitoring algorithm."),
   "IsRHD": tr_noop("Use right-hand-drive driver monitoring. This follows the auto-detected side until changed manually."),
   "IsMetric": tr_noop("Display speed in km/h instead of mph."),
@@ -78,6 +82,12 @@ class TogglesLayout(Widget):
         DESCRIPTIONS["AlwaysOnDM"],
         "monitoring.png",
         False,
+      ),
+      "FaceCoveringMode": (
+        lambda: tr("Face Covering Mode"),
+        DESCRIPTIONS["FaceCoveringMode"],
+        "monitoring.png",
+        True,
       ),
       "IsRHD": (
         lambda: tr("Right Hand Driving"),

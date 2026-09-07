@@ -24,6 +24,8 @@ class TogglesLayoutMici(NavScroller):
     is_metric_toggle = BigParamControl("use metric units", "IsMetric")
     ldw_toggle = BigParamControl("lane departure warnings", "IsLdwEnabled")
     always_on_dm_toggle = BigParamControl("always-on driver monitor", "AlwaysOnDM")
+    face_covering_mode_toggle = BigParamControl("face covering mode", "FaceCoveringMode",
+                                                toggle_callback=restart_needed_callback)
     rhd_toggle = BigParamControl("right hand driving", "IsRHD", toggle_callback=rhd_toggle_callback)
     record_front = BigParamControl("record & upload driver camera", "RecordFront", toggle_callback=restart_needed_callback)
     record_mic = BigParamControl("record & upload mic audio", "RecordAudio", toggle_callback=restart_needed_callback)
@@ -36,6 +38,7 @@ class TogglesLayoutMici(NavScroller):
       is_metric_toggle,
       ldw_toggle,
       always_on_dm_toggle,
+      face_covering_mode_toggle,
       rhd_toggle,
       record_front,
       record_mic,
@@ -49,6 +52,7 @@ class TogglesLayoutMici(NavScroller):
       ("IsMetric", is_metric_toggle),
       ("IsLdwEnabled", ldw_toggle),
       ("AlwaysOnDM", always_on_dm_toggle),
+      ("FaceCoveringMode", face_covering_mode_toggle),
       ("IsRHD", rhd_toggle),
       ("RecordFront", record_front),
       ("RecordAudio", record_mic),
@@ -56,6 +60,7 @@ class TogglesLayoutMici(NavScroller):
     )
 
     enable_openpilot.set_enabled(lambda: not ui_state.engaged)
+    face_covering_mode_toggle.set_enabled(lambda: not ui_state.engaged)
     record_front.set_enabled(False if ui_state.params.get_bool("RecordFrontLock") else (lambda: not ui_state.engaged))
     record_mic.set_enabled(lambda: not ui_state.engaged)
 
